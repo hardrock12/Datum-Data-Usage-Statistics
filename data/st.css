@@ -87,11 +87,12 @@ width:200px;
 	
 	position:absolute;
 	
-	margin:35px;background-color:orange;color:white
+	margin:35px;background-color:orange;color:white;
 border-radius:8px;
 	border-style:solid;
 	text-align:center;
 	font-size:28px;
+	cursor:pointer;
 
 }
 .reset_but{

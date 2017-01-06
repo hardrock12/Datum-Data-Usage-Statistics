@@ -1,0 +1,15 @@
+{
+  "title": "Datum:Data Usage Statistics",
+  "name": "datumdatausage",
+  "version": "0.0.0",
+  "description": "A basic add-on",
+  "main": "monitor.js",
+  "author": "Arjun Suresh",
+  "engines": {
+    "firefox": ">=38.0a1"
+  },
+  "license": "MIT",
+  "keywords": [
+    "jetpack"
+  ]
+}
