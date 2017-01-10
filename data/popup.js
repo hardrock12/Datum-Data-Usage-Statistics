@@ -1,10 +1,14 @@
 
-
+var fir=false;
 
 self.port.on("show",function (reports){
 
+if(fir==false)
+{
+fir=true;
 
 showdata(reports);
+}
 })
 
 function showdata(mes){
@@ -40,7 +44,7 @@ websitelist.push({site:key,use:mes.persite[key]});
 	{
 		for(j=i+1;j<websitelist.length;j++)
 		{
- console.log(websitelist[i].use,websitelist[j]);
+ //console.log(websitelist[i].use,websitelist[j]);
 			if(websitelist[i].use<websitelist[j].use)
 			{ 	
 				t=websitelist[i];

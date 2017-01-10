@@ -62,6 +62,7 @@ function TracingListener(url) {
 
 this.url=url.spec;
 this.urlobj=url;
+console.log("trace:"+this.url);
 
 
 }
@@ -72,11 +73,12 @@ TracingListener.prototype=
 onDataAvailable:function(request, context, inputStream, offset, count) {
         //console.log(this.url,count);
 	  this.originalListener.onDataAvailable(request, context, inputStream, offset, count);
-	
-	var data_count=ss.storage.data_count;
+	try{
+	var x=ss.storage.data_count;
 	cdata=count;
-var x;
-	if(data_count==undefined){init();}	else{x=data_count;} 
+
+	if(x==undefined){init();}
+		
 	var df=new Date();
 	var day,month,year,tdate;
 	day=df.getDate();
@@ -87,8 +89,7 @@ var x;
 	x.bytesinmonth+=cdata;
 	x.bytesinday+=cdata;
 	ss.storage.data_count=x;
-	if(stats==null){//
-		return ;}
+	
 	
 	if(mstats[tdate]==null)
 	{	mstats[tdate]=0; }
@@ -99,7 +100,13 @@ if(stats[gethost(this.url)]==null)
 	
 	ss.storage.stat=stats;
 	ss.storage.mstat=mstats;
+		}
+		catch(e)
+		{
 		
+		
+		
+		}
       
     },
     onStartRequest: function(request, context) {
@@ -291,6 +298,7 @@ console.log("handle registered");
 Services.obs.addObserver(httpRequestObserver, "http-on-examine-response", false);
 }
 function removehandle(){
+console.log("handle  unregistered");
 Services.obs.removeObserver(httpRequestObserver, "http-on-examine-response");
 
 
@@ -306,11 +314,10 @@ if(	ss.storage.init==null)
 	ss.storage.stat={};
 	ss.storage.mstat={};
 
-	ss.storage.settings={ismb:1,version:1.3,cur_day:d.getDay(),cur_month:d.getMonth(),ison:true};
-	ss.storage.init=1;
 	mstats={};
 	stats={};
-	sets=ss.storage.settings;
+	sets={ismb:1,ison:true,version:2.1,cur_day:d.getDay(),cur_month:d.getMonth()};
+ss.storage.settings=sets;
 }
 
 													 
@@ -318,25 +325,11 @@ else{
 
 
 sets=ss.storage.settings;
-																										  if(sets.version==1)
-																										  {
-																											 
-																										  sets.mstats={};
-																										  sets.version=1.3;
-																											 ss.storage.settings=sets;
+mstats=ss.storage.mstat;
+stats=ss.storage.mstat
+																										  
 }
-																										  	  		  
-mstat=ss.storage.mstat;
-stat=ss.storage.stat;
 
-
-
-
-
-
-
-
-}
 }
 
 //browser.runtime.onMessage.addListener(notify);
@@ -360,12 +353,11 @@ var self = require("sdk/self");
 
 
 
-init();
-registerhandle();
 
 
 
-console.log(self.data.url("screen.html"),self.data.url("ui.js"));
+
+//console.log(self.data.url("screen.html"),self.data.url("ui.js"));
 var button = ToggleButton({
   id: "datumpanel",
   label: "Datum: Data Usage and Statistics",
@@ -377,7 +369,8 @@ var button = ToggleButton({
   onChange: handleChange
 });
 
-var panel= panels.Panel({
+var panel;
+ panel= panels.Panel({
   contentURL:"./screen.html",  
   contentScriptFile:["./ui.js","./jquery-3.1.1.min.js"],  
   onHide: handleHide
@@ -394,7 +387,7 @@ var panel= panels.Panel({
 function handleChange(state) {
   if (state.checked) {
     panel.show({position: button,width:350,height:650});
-   codeforpanel();
+  // codeforpanel();
   }
 }
 
@@ -486,6 +479,9 @@ function notify(mess)
 
 }
 
-
-
+exports.onUnload = function (reason) {
+removehandle();
+};
+init();
+registerhandle();
 

@@ -1,13 +1,15 @@
 var cx,sets,tab_listed,store,usage,divfac,data_txt;
-var cl=console.log;
+var cl=function(rt){};//console.log;
 cx={};
 sets=null;
 tab_listed=false;
 store=null;
 var firsttime=true;
-console.log(self);
+//console.log(self);
 self.port.on("show",function(store_var)
 {
+
+console.log("showing ui.js",store_var);
 store=store_var.store;
 //console.log("store loaded",store);
 init1();
@@ -30,13 +32,14 @@ else{
 	cx=usage;
 }
 	
+	console.log("cx",cx);
 
 sets=store.settings;
 		
 		
 var d=new Date();
 if(d.getMonth()!=get_pref("cur_month")){
-			t_pref("cur_month",d.getMonth());					 
+			set_pref("cur_month",d.getMonth());					 
 		 resetmonth();
 	 }
 if(d.getDay()!=get_pref("cur_day"))
@@ -57,8 +60,7 @@ if(d.getDay()!=get_pref("cur_day"))
  		
 		 $('#month_val').text(""+(cx.bytesinmonth/divfac).toFixed(2)+" "+data_txt);
 				$('#day_val').text(""+ (cx.bytesinday/divfac).toFixed(2)+" "+data_txt);			
-
-
+console.log(cx,"setc oiunter");
 		addeventhandler();
 
 
@@ -111,31 +113,34 @@ if(d.getDay()!=get_pref("cur_day"))
 }
 function addeventhandler()
 {
-cl("add event handler");
+//cl("add event handler");
+var arr=null;
+var i;
 if(firsttime==true)
 {	
 	firsttime=false;
+
 
 
  arr=["#tb","#reset_month","#ton","#reset_day",'#tab1',"#tab2","#tab3","#advanced_report"];
 for(i=0;i<arr.length;i++)
 {
 sa=arr[i];
-cl(sa);
+//cl(sa);
 $(sa).off('click');
 
 }
 
-self.port.emit("tmb");
+//self.port.emit("tmb");
 $('#tmb').click(toggle_mb);
-		$('#reset_month').click(resetmonth);
+		$('#reset_month').click(resetmonth);   
 		$('#ton').click(toggle_power);
 		$('#reset_day').click(resetday);
 		$('#tab1').click(function(){select_tab(1)});
 		$('#tab2').click(function(){select_tab(2)});
 		$('#tab3').click(function(){select_tab(3)});
-		$('#advanced_report').click(function(){   
-		
+		$('#advanced_report').click(function(){  
+
 		self.port.emit("loaddata");
 		
 		});
@@ -143,7 +148,7 @@ $('#tmb').click(toggle_mb);
 }
 function resetmonth()
 {
-		//console.log("reset month done");
+		console.log("reset month done");
 
 	store.data_count={bytesinmonth:0,bytesinday:cx.bytesinday};
 self.port.emit("resetmonth");
@@ -156,7 +161,7 @@ self.port.emit("resetmonth");
 function resetday()
 {
 	
-	//console.log("reset day done");
+	console.log("reset day done");
 	cx.bytesinday=0;
 	self.port.emit("resetday");
 	
@@ -189,7 +194,7 @@ function display_counts(d)
 }
 function get_pref(str)
 {
-
+ 
          return sets[str];
 
 }
@@ -232,11 +237,12 @@ cl($('#knoble_mb').attr('class'));
 }
 
 function select_tab(tab)
-{		if(tab==2&&tab_listed==false)
+{		if(tab==2)
 		{
 		var stt,arr,t,url,i,j,maxx,len,num_pr,stat;
-			tab_listed=true;
+			//tab_listed=true;
 			stat=store.stat;
+
 			if(stat=={}){return;}
 	
 			stt=stat;
@@ -265,13 +271,14 @@ function select_tab(tab)
 	}
 		maxx=arr[0].b;
 		len=10>arr.length?arr.length:10;
+		
+				$('#stats').html('');
 	for( i=0;i<len;i++){
 
-	
 				$('#stats').append("<div class=\"stat-item\"><div class=\"stat-url\" >"+arr[i].u+"</div><div class=\"stat-mb\">"+(arr[i].b/(1024*1024)).toFixed(2)+" MB</div><div style=\"height:12px;position:absolute;margin-top:22px;margin-left:15px;transform:skewX(-20deg);background-color:#ff5722;width:"+parseInt(85*arr[i].b/maxx)+"%\"></div></div>");
- }
+ }}
  
-}
+ 
 	for( i=1;i<=3;i++){
 		$('#tab'+i).removeClass('tab-selected');
 		$('#tabc'+i).removeClass('tab-content-selected');
